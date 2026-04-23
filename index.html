@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Sami</title>
+  <meta name="theme-color" content="#10131b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Sami">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=20260424c">
+  <link rel="manifest" href="./manifest.webmanifest?v=20260424c">
+  <link rel="stylesheet" href="./app.css?v=20260424c">
+</head>
+<body class="tester-mobile">
+  <div class="screen" id="screen">
+    <div class="launch-splash" id="launchSplash" aria-hidden="true">
+      <img class="launch-splash-logo" src="./icon.png" alt="Sami logo">
+    </div>
+    <div class="folder-backdrop" id="folderBackdrop"></div>
+    <div class="app" id="app">
+      <aside class="pane done-pane" id="donePane">
+        <div class="pane-inner">
+          <div class="head done-head">
+            <div class="eyebrow"><span class="lamp" id="doneLamp"></span><span>Done</span></div>
+            <div class="done-brand-wrap">
+              <div class="done-brand-row">
+                <button class="brand brand-button" id="doneFolderToggle" type="button">Sami</button>
+                <button class="done-folder-actions-trigger" id="doneFolderActionsToggle" type="button">&middot;&middot;&middot;</button>
+                <div class="current-folder-actions" id="currentFolderActions"></div>
+              </div>
+              <div class="done-folder-menu" id="doneFolderMenu"></div>
+            </div>
+            <div class="row done-count-row">
+              <div class="pill" id="doneCount">Done 0</div>
+            </div>
+          </div>
+          <div class="list" id="doneList"></div>
+        </div>
+      </aside>
+      <section class="pane live-pane" id="livePane">
+        <div class="pane-inner">
+          <div class="head">
+            <div class="eyebrow"><span class="lamp" id="liveLamp"></span><span>Live</span></div>
+            <div class="row live-toolbar">
+              <div class="pill" id="liveCount">Live 0</div>
+              <button class="chip undo-btn" id="undoBtn" type="button">Undo</button>
+            </div>
+          </div>
+          <div class="list" id="liveList"></div>
+        </div>
+      </section>
+    </div>
+    <button class="fab" id="addFab" type="button">+</button>
+    <div class="overlay" id="overlay"></div>
+  </div>
+  <script src="./app.js?v=20260424c"></script>
+</body>
+</html>
