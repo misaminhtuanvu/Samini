@@ -2,7 +2,7 @@
   /* UI LOCK: chỉ sửa tỉ lệ / font / vị trí ở block này */
   --split-live:.23;
   --split-done:.77;
-  --app-top-rail:58px;
+  --app-top-rail:50px;
   --pane-top-inset:18px;
   --pane-side-inset:12px;
   --pane-bottom-inset:14px;
@@ -572,43 +572,44 @@ html.mobile-host .fab{
 }
 .done-pane.compact .done-brand-wrap{
   position:absolute;
-  left:0;
-  right:0;
+  left:50%;
   bottom:calc(22px + env(safe-area-inset-bottom));
-  height:var(--compact-folder-band-height);
+  width:0;
+  height:0;
   overflow:visible;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:block;
+  pointer-events:none;
 }
 .done-pane.compact .brand-button{
   position:absolute;
-  left:50%;
-  top:50%;
+  left:0;
+  bottom:0;
   width:max-content;
   max-width:none;
-  transform:translate(-50%,-50%) rotate(-90deg);
-  transform-origin:center center;
+  transform:translate(-50%,0) rotate(-90deg);
+  transform-origin:left bottom;
   white-space:nowrap;
   overflow:visible;
   overflow-wrap:normal;
   font-size:clamp(72px, 9vw, var(--compact-folder-size));
   line-height:.92;
   cursor:default;
+  pointer-events:none;
 }
 .done-pane.compact .done-folder-menu{
   left:50%;
   top:auto;
-  bottom:18px;
+  bottom:calc(86px + env(safe-area-inset-bottom));
   transform:translateX(22px);
 }
 .live-pane.compact .list{
   display:none;
 }
 .live-pane.compact .head{
-  flex:1;
+  flex:none;
   justify-content:flex-start;
-  min-height:0;
+  min-height:138px;
+  align-items:flex-end;
 }
 .done-pane.compact .pane-inner{
   left:calc(8px + env(safe-area-inset-left));

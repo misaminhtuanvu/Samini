@@ -497,7 +497,6 @@ function render() {
   liveCount.textContent = `${state.live.length}`;
   doneCount.textContent = `${doneNotesForCurrentFolder().length}`;
   doneFolderToggle.textContent = currentFolderName;
-  donePane.style.setProperty("--compact-folder-band-height", `${Math.ceil(doneFolderToggle.scrollWidth + 12)}px`);
   undoBtn.disabled = !state.lastMoved;
   undoBtn.style.opacity = state.lastMoved ? "1" : ".45";
 
