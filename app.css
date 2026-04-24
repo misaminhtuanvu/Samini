@@ -63,13 +63,6 @@ button,input,textarea{font:inherit}
   background:#10131b;
   isolation:isolate;
 }
-.top-chrome{
-  position:absolute;
-  inset:0 0 auto 0;
-  height:var(--app-top-rail);
-  background:#10131b;
-  z-index:3;
-}
 .launch-splash{
   position:absolute;
   inset:0;
@@ -132,24 +125,21 @@ button,input,textarea{font:inherit}
     border-radius:0;
     background:#10131b;
   }
-  .top-chrome{
-    display:none;
-  }
   .island{
     display:none;
   }
   .app{
-    inset:env(safe-area-inset-top) 0 0 0;
+    inset:0;
   }
   .pane-inner{
     inset:
-      18px
+      calc(18px + env(safe-area-inset-top))
       max(12px, env(safe-area-inset-right))
       max(16px, env(safe-area-inset-bottom))
       max(12px, env(safe-area-inset-left));
   }
   .pane-rail{
-    top:18px;
+    top:calc(18px + env(safe-area-inset-top));
   }
   .done-rail{
     left:max(12px, env(safe-area-inset-left));
@@ -182,8 +172,8 @@ button,input,textarea{font:inherit}
 .island{
   position:absolute;
   left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
+  top:14px;
+  transform:translateX(-50%);
   width:154px;
   height:40px;
   border-radius:24px;
@@ -338,7 +328,7 @@ button,input,textarea{font:inherit}
 }
 .done-brand-compact{
   position:absolute;
-  left:var(--compact-folder-left);
+  left:min(var(--compact-folder-left), calc(100% - 18px));
   bottom:0;
   transform:rotate(-90deg);
   transform-origin:left bottom;
@@ -611,7 +601,6 @@ button,input,textarea{font:inherit}
 }
 .done-pane.compact .done-compact-slot{
   opacity:1;
-  right:calc(var(--pane-side-inset) + 14px);
 }
 .live-pane.compact .list{
   display:none;
@@ -626,9 +615,6 @@ button,input,textarea{font:inherit}
   left:calc(8px + env(safe-area-inset-left));
   right:8px;
   gap:10px;
-}
-.done-pane.compact .done-rail{
-  right:calc(var(--pane-side-inset) + 12px);
 }
 .live-pane.compact .pane-inner{
   left:8px;
