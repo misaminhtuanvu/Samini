@@ -19,6 +19,8 @@ const undoBtn = document.getElementById("undoBtn");
 const addFab = document.getElementById("addFab");
 const overlay = document.getElementById("overlay");
 const launchSplash = document.getElementById("launchSplash");
+const compactMeasureCanvas = document.createElement("canvas");
+let modeFxTimer = null;
 
 const state = loadState();
 let drag = null;
@@ -110,14 +112,6 @@ function focusLater(id, selectAll = false) {
     catch { el.focus(); }
     if (selectAll && typeof el.select === "function") el.select();
   });
-}
-
-function syncViewportMode() {
-  const mobileLike =
-    window.matchMedia("(max-width: 820px)").matches ||
-    window.matchMedia("(pointer: coarse)").matches ||
-    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-  document.documentElement.classList.toggle("mobile-host", mobileLike);
 }
 
 function saveNote() {
@@ -261,7 +255,7 @@ function moveLiveToDone(noteId) {
   state.live.splice(index, 1);
   state.done.unshift({ id: note.id, text: note.text, createdAt: note.createdAt, doneAt: now(), folderId: state.currentFolderId || state.folders[0].id });
   state.lastMoved = { note: { id: note.id, text: note.text, createdAt: note.createdAt } };
-  state.mode = "done";
+  setMode("done");
   persist();
   render();
 }
@@ -273,7 +267,7 @@ function moveDoneToLive(noteId) {
   state.done.splice(index, 1);
   state.live.unshift({ id: note.id, text: note.text, createdAt: note.createdAt });
   state.lastMoved = null;
-  state.mode = "live";
+  setMode("live");
   persist();
   render();
 }
@@ -284,7 +278,7 @@ function undoMove() {
   state.done = state.done.filter(n => n.id !== note.id);
   state.live.unshift({ id: note.id, text: note.text, createdAt: note.createdAt });
   state.lastMoved = null;
-  state.mode = "live";
+  setMode("live");
   persist();
   render();
 }
@@ -484,9 +478,51 @@ function renderCurrentFolderActions() {
   });
 }
 
+function getCurrentFolderName() {
+  return (state.folders.find(f => f.id === state.currentFolderId)?.name) || "Samini";
+}
+
+function syncCompactFolderText(fullName) {
+  doneFolderCompact.textContent = fullName;
+  if (state.mode !== "live") return;
+  const wrap = doneFolderCompact.parentElement;
+  const ctx = compactMeasureCanvas.getContext("2d");
+  if (!wrap || !ctx) return;
+  const available = Math.max(24, Math.floor(wrap.getBoundingClientRect().height - 16));
+  const style = getComputedStyle(doneFolderCompact);
+  ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+  const measure = text => ctx.measureText(text).width;
+  if (measure(fullName) <= available) {
+    doneFolderCompact.textContent = fullName;
+    return;
+  }
+  const ellipsis = "...";
+  let lo = 0;
+  let hi = fullName.length;
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    const candidate = `${fullName.slice(0, mid)}${ellipsis}`;
+    if (measure(candidate) <= available) lo = mid;
+    else hi = mid - 1;
+  }
+  doneFolderCompact.textContent = lo > 0 ? `${fullName.slice(0, lo)}${ellipsis}` : ellipsis;
+}
+
+function setMode(nextMode) {
+  if (state.mode === nextMode) return;
+  state.mode = nextMode;
+  root.classList.remove("is-switching-live", "is-switching-done");
+  root.classList.add(nextMode === "live" ? "is-switching-live" : "is-switching-done");
+  if (modeFxTimer) window.clearTimeout(modeFxTimer);
+  modeFxTimer = window.setTimeout(() => {
+    root.classList.remove("is-switching-live", "is-switching-done");
+    modeFxTimer = null;
+  }, 430);
+}
+
 function render() {
   ensureFolderIds();
-  const currentFolderName = (state.folders.find(f => f.id === state.currentFolderId)?.name) || "Samini";
+  const currentFolderName = getCurrentFolderName();
   root.style.setProperty("--split", splitRatio());
   folderBackdrop.classList.toggle("active", state.doneFolderOpen || state.folderActionId === state.currentFolderId);
   addFab.classList.toggle("muted", state.doneFolderOpen || state.folderActionId === state.currentFolderId || !!state.confirmDialog);
@@ -498,7 +534,7 @@ function render() {
   liveCount.textContent = `${state.live.length}`;
   doneCount.textContent = `${doneNotesForCurrentFolder().length}`;
   doneFolderToggle.textContent = currentFolderName;
-  doneFolderCompact.textContent = currentFolderName;
+  syncCompactFolderText(currentFolderName);
   undoBtn.disabled = !state.lastMoved;
   undoBtn.style.opacity = state.lastMoved ? "1" : ".45";
 
@@ -530,7 +566,7 @@ undoBtn.addEventListener("click", undoMove);
 doneFolderToggle.addEventListener("click", e => {
   e.stopPropagation();
   if (state.mode === "live") {
-    state.mode = "done";
+    setMode("done");
     state.doneFolderOpen = false;
     state.folderDraft = null;
     render();
@@ -541,7 +577,7 @@ doneFolderToggle.addEventListener("click", e => {
 doneFolderActionsToggle?.addEventListener("click", e => {
   e.stopPropagation();
   if (state.mode === "live") {
-    state.mode = "done";
+    setMode("done");
     state.doneFolderOpen = false;
     state.folderDraft = null;
     state.folderActionId = null;
@@ -559,14 +595,14 @@ folderBackdrop.addEventListener("click", () => {
 });
 livePane.addEventListener("click", e => {
   if (state.mode === "done") {
-    state.mode = "live";
+    setMode("live");
     state.doneFolderOpen = false;
     state.folderDraft = null;
     render();
     return;
   }
   if (!e.target.closest(".card") && !e.target.closest(".head")) {
-    state.mode = "live";
+    setMode("live");
     state.doneFolderOpen = false;
     state.folderDraft = null;
     render();
@@ -575,7 +611,7 @@ livePane.addEventListener("click", e => {
 donePane.addEventListener("click", e => {
   if (state.mode === "live") {
     if (!e.target.closest("#doneFolderMenu")) {
-      state.mode = "done";
+      setMode("done");
       state.doneFolderOpen = false;
       state.folderDraft = null;
       render();
@@ -583,13 +619,13 @@ donePane.addEventListener("click", e => {
     return;
   }
   if (!e.target.closest(".card") && !e.target.closest(".head")) {
-    state.mode = "done";
+    setMode("done");
     render();
   }
 });
 window.addEventListener("resize", () => {
-  syncViewportMode();
   if (state.noteSheet) renderOverlay();
+  syncCompactFolderText(getCurrentFolderName());
 });
 document.addEventListener("click", e => {
   if (state.confirmDialog) return;
@@ -606,6 +642,5 @@ document.addEventListener("click", e => {
   }
 });
 
-syncViewportMode();
 render();
 startLaunchSplash();
