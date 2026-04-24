@@ -80,72 +80,22 @@ button,input,textarea{font:inherit}
   height:auto;
   display:block;
 }
-body.tester-mobile{
-  display:block;
-  background:#10131b;
-  min-height:100vh;
-  min-height:100svh;
-  min-height:100dvh;
-}
-body.tester-mobile .device{
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  height:100svh;
-  height:100dvh;
-  min-height:100vh;
-  min-height:100svh;
-  min-height:100dvh;
-  aspect-ratio:auto;
-  border-radius:0;
-  background:#10131b;
-  padding:0;
-  box-shadow:none;
-}
-body.tester-mobile .screen{
-  width:100%;
-  height:100%;
-  min-height:100%;
-  border-radius:0;
-  background:#10131b;
-}
-body.tester-mobile .island{
-  display:none !important;
-}
-body.tester-mobile .app{
-  inset:calc(env(safe-area-inset-top) + 34px) 0 0 0 !important;
-  padding-top:0 !important;
-}
-body.tester-mobile .pane-inner{
-  inset:
-    18px
-    calc(12px + env(safe-area-inset-right))
-    calc(16px + env(safe-area-inset-bottom))
-    calc(12px + env(safe-area-inset-left));
-}
-body.tester-mobile .fab{
-  right:calc(22px + env(safe-area-inset-right));
-  bottom:calc(22px + env(safe-area-inset-bottom));
-}
 @media (max-width: 820px), (pointer: coarse){
   body{
     display:block;
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
     background:#10131b;
-    min-height:100vh;
-    min-height:100svh;
-    min-height:100dvh;
+    overflow:hidden;
   }
   .device{
     position:fixed;
     inset:0;
-    width:100vw;
-    height:100vh;
-    height:100svh;
-    height:100dvh;
-    min-height:100vh;
-    min-height:100svh;
-    min-height:100dvh;
+    width:auto;
+    height:auto;
+    min-height:0;
     aspect-ratio:auto;
     border-radius:0;
     background:#10131b;
@@ -153,9 +103,11 @@ body.tester-mobile .fab{
     box-shadow:none;
   }
   .screen{
-    width:100%;
-    height:100%;
-    min-height:100%;
+    position:absolute;
+    inset:0;
+    width:auto;
+    height:auto;
+    min-height:0;
     border-radius:0;
     background:#10131b;
   }
@@ -163,7 +115,7 @@ body.tester-mobile .fab{
     display:none;
   }
   .app{
-    inset:calc(env(safe-area-inset-top) + 10px) 0 0 0;
+    inset:calc(env(safe-area-inset-top) + 18px) 0 0 0;
     padding-top:0;
   }
   .pane-inner{
@@ -180,21 +132,19 @@ body.tester-mobile .fab{
 }
 html.mobile-host body{
   display:block;
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
   background:#10131b;
-  min-height:100vh;
-  min-height:100svh;
-  min-height:100dvh;
+  overflow:hidden;
 }
 html.mobile-host .device{
   position:fixed;
   inset:0;
-  width:100vw;
-  height:100vh;
-  height:100svh;
-  height:100dvh;
-  min-height:100vh;
-  min-height:100svh;
-  min-height:100dvh;
+  width:auto;
+  height:auto;
+  min-height:0;
   aspect-ratio:auto;
   border-radius:0;
   background:#10131b;
@@ -202,9 +152,11 @@ html.mobile-host .device{
   box-shadow:none;
 }
 html.mobile-host .screen{
-  width:100%;
-  height:100%;
-  min-height:100%;
+  position:absolute;
+  inset:0;
+  width:auto;
+  height:auto;
+  min-height:0;
   border-radius:0;
   background:#10131b;
 }
@@ -212,7 +164,7 @@ html.mobile-host .island{
   display:none;
 }
 html.mobile-host .app{
-  inset:calc(env(safe-area-inset-top) + 10px) 0 0 0;
+  inset:calc(env(safe-area-inset-top) + 18px) 0 0 0;
   padding-top:0;
 }
 html.mobile-host .pane-inner{
@@ -258,6 +210,7 @@ html.mobile-host .fab{
   box-sizing:border-box;
   display:grid;
   grid-template-columns:calc(var(--split) * 100%) calc((1 - var(--split)) * 100%);
+  transition:grid-template-columns .24s cubic-bezier(.22,.61,.36,1);
 }
 .pane{
   min-width:0;
@@ -496,20 +449,24 @@ html.mobile-host .fab{
 .folder-input-inline{
   font-family:var(--folder-font);
   width:100%;
-  min-height:62px;
+  min-height:56px;
   border:0;
   outline:none;
   border-radius:18px;
-  padding:10px 14px;
+  padding:14px 16px;
   background:rgba(255,255,255,.14);
   color:#fff8f1;
-  font-size:42px;
-  line-height:.95;
-  font-weight:800;
+  font-size:22px;
+  line-height:1.12;
+  font-weight:700;
   letter-spacing:-.05em;
   font-style:normal;
   font-synthesis:none;
   text-rendering:geometricPrecision;
+}
+.folder-input-inline::placeholder{
+  color:rgba(255,248,241,.58);
+  font-size:.82em;
 }
 .folder-save-inline{
   min-height:44px;
@@ -617,7 +574,7 @@ html.mobile-host .fab{
   position:absolute;
   left:0;
   right:0;
-  bottom:18px;
+  bottom:calc(22px + env(safe-area-inset-bottom));
   height:var(--compact-folder-band-height);
   overflow:visible;
   display:flex;
@@ -651,6 +608,17 @@ html.mobile-host .fab{
 .live-pane.compact .head{
   flex:1;
   justify-content:flex-start;
+  min-height:0;
+}
+.done-pane.compact .pane-inner{
+  left:calc(8px + env(safe-area-inset-left));
+  right:8px;
+  gap:10px;
+}
+.live-pane.compact .pane-inner{
+  left:8px;
+  right:calc(8px + env(safe-area-inset-right));
+  gap:10px;
 }
 .card-text{
   margin:0;
@@ -704,6 +672,11 @@ html.mobile-host .fab{
 .fab.muted{
   opacity:.18;
   transform:scale(.96);
+  pointer-events:none;
+}
+.fab.hidden{
+  opacity:0;
+  transform:scale(.82);
   pointer-events:none;
 }
 .fab::before,
@@ -912,64 +885,4 @@ html.mobile-host .fab{
   flex-direction:column;
   justify-content:space-between;
   color:#161a22;
-}
-
-/* tester mobile build: full-screen thật, không phụ thuộc shell giả */
-body.tester-mobile{
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  height:100svh;
-  height:100dvh;
-  overflow:hidden;
-}
-body.tester-mobile .screen{
-  --tester-top-rail:calc(env(safe-area-inset-top, 0px) + 18px);
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  height:100svh;
-  height:100dvh;
-  min-height:100vh;
-  min-height:100svh;
-  min-height:100dvh;
-  border-radius:0;
-  background:#10131b;
-  overflow:hidden;
-  isolation:isolate;
-}
-body.tester-mobile .screen::before{
-  content:"";
-  position:absolute;
-  inset:0 0 auto 0;
-  height:var(--tester-top-rail);
-  background:#10131b;
-  z-index:1;
-}
-body.tester-mobile .app{
-  position:absolute;
-  inset:var(--tester-top-rail) 0 0 0 !important;
-  padding-top:0 !important;
-}
-body.tester-mobile .pane-inner{
-  inset:
-    18px
-    calc(12px + env(safe-area-inset-right, 0px))
-    calc(16px + env(safe-area-inset-bottom, 0px))
-    calc(12px + env(safe-area-inset-left, 0px)) !important;
-}
-body.tester-mobile .launch-splash{
-  position:fixed;
-  inset:0;
-}
-body.tester-mobile .folder-backdrop,
-body.tester-mobile .overlay{
-  position:absolute;
-  inset:0;
-}
-body.tester-mobile .fab{
-  right:calc(22px + env(safe-area-inset-right, 0px)) !important;
-  bottom:calc(22px + env(safe-area-inset-bottom, 0px)) !important;
 }

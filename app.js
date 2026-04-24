@@ -105,16 +105,13 @@ function focusLater(id, selectAll = false) {
   requestAnimationFrame(() => {
     const el = document.getElementById(id);
     if (!el) return;
-    el.focus();
+    try { el.focus({ preventScroll: true }); }
+    catch { el.focus(); }
     if (selectAll && typeof el.select === "function") el.select();
   });
 }
 
 function syncViewportMode() {
-  if (document.body.classList.contains("tester-mobile")) {
-    document.documentElement.classList.remove("mobile-host");
-    return;
-  }
   const mobileLike =
     window.matchMedia("(max-width: 820px)").matches ||
     window.matchMedia("(pointer: coarse)").matches ||
@@ -311,7 +308,7 @@ function buildCard(note, source) {
   const card = document.createElement("button");
   card.type = "button";
   card.className = "card";
-  card.innerHTML = `<p class="card-text">${esc(note.text)}</p><div class="card-meta"><span>${fmt(source === "done" ? note.doneAt : note.createdAt)}</span><span>${source === "done" ? "" : "giu va nem"}</span></div>`;
+  card.innerHTML = `<p class="card-text">${esc(note.text)}</p><div class="card-meta"><span>${fmt(source === "done" ? note.doneAt : note.createdAt)}</span><span></span></div>`;
   card.addEventListener("pointerdown", e => startDragGesture(e, note.id, card, source));
   return card;
 }
@@ -341,7 +338,7 @@ function startDragGesture(event, noteId, card, source) {
       moved = true;
       ghost = document.createElement("div");
       ghost.className = "drag-ghost";
-      ghost.innerHTML = `<p class="card-text">${esc(note.text)}</p><div class="card-meta"><span>${fmt(note.createdAt)}</span><span>giu va nem</span></div>`;
+      ghost.innerHTML = `<p class="card-text">${esc(note.text)}</p><div class="card-meta"><span>${fmt(note.createdAt)}</span><span></span></div>`;
       document.body.appendChild(ghost);
     }
     if (!ghost) return;
@@ -492,6 +489,7 @@ function render() {
   root.style.setProperty("--split", splitRatio());
   folderBackdrop.classList.toggle("active", state.doneFolderOpen || state.folderActionId === state.currentFolderId);
   addFab.classList.toggle("muted", state.doneFolderOpen || state.folderActionId === state.currentFolderId || !!state.confirmDialog);
+  addFab.classList.toggle("hidden", state.mode === "done");
   donePane.classList.toggle("compact", state.mode === "live");
   livePane.classList.toggle("compact", state.mode === "done");
   liveLamp.classList.toggle("on", state.mode === "live");
