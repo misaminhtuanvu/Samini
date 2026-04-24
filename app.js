@@ -10,6 +10,7 @@ const doneLamp = document.getElementById("doneLamp");
 const liveCount = document.getElementById("liveCount");
 const doneCount = document.getElementById("doneCount");
 const doneFolderToggle = document.getElementById("doneFolderToggle");
+const doneFolderCompact = document.getElementById("doneFolderCompact");
 const doneFolderActionsToggle = document.getElementById("doneFolderActionsToggle");
 const currentFolderActions = document.getElementById("currentFolderActions");
 const doneFolderMenu = document.getElementById("doneFolderMenu");
@@ -497,6 +498,7 @@ function render() {
   liveCount.textContent = `${state.live.length}`;
   doneCount.textContent = `${doneNotesForCurrentFolder().length}`;
   doneFolderToggle.textContent = currentFolderName;
+  doneFolderCompact.textContent = currentFolderName;
   undoBtn.disabled = !state.lastMoved;
   undoBtn.style.opacity = state.lastMoved ? "1" : ".45";
 

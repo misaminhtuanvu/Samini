@@ -6,11 +6,20 @@
   <title>Sami</title>
   <meta name="theme-color" content="#10131b">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Sami">
-  <link rel="apple-touch-icon" href="./icon.png?v=20260424d">
-  <link rel="manifest" href="./manifest.webmanifest?v=20260424d">
-  <link rel="stylesheet" href="./app.css?v=20260424d">
+  <script>
+    (function () {
+      var isMobileHost =
+        window.matchMedia("(pointer: coarse)").matches ||
+        window.innerWidth <= 820 ||
+        /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      document.documentElement.classList.toggle("mobile-host", isMobileHost);
+    }());
+  </script>
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=20260424f">
+  <link rel="manifest" href="./manifest.webmanifest?v=20260424f">
+  <link rel="stylesheet" href="./app.css?v=20260424f">
 </head>
 <body>
   <div class="device">
@@ -31,6 +40,7 @@
                   <button class="done-folder-actions-trigger" id="doneFolderActionsToggle" type="button">&middot;&middot;&middot;</button>
                   <div class="current-folder-actions" id="currentFolderActions"></div>
                 </div>
+                <div class="done-brand-compact" id="doneFolderCompact" aria-hidden="true">Sami</div>
                 <div class="done-folder-menu" id="doneFolderMenu"></div>
               </div>
               <div class="row done-count-row">
@@ -57,6 +67,6 @@
       <div class="overlay" id="overlay"></div>
     </div>
   </div>
-  <script src="./app.js?v=20260424d"></script>
+  <script src="./app.js?v=20260424f"></script>
 </body>
 </html>
