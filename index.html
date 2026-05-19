@@ -10,27 +10,61 @@
   <meta name="apple-mobile-web-app-title" content="Sami">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=20260425b">
   <link rel="manifest" href="./manifest.webmanifest?v=20260425b">
-  <link rel="stylesheet" href="./app.css?v=20260425b">
+  <script>
+    (() => {
+      try {
+        const raw = JSON.parse(localStorage.getItem("sami-v3") || "{}");
+        const oldCustomMode = raw.themeMode === "custom";
+        const savedMode = oldCustomMode ? "light" : raw.themeMode;
+        const mode = ["dark", "light"].includes(savedMode) ? savedMode : "light";
+        const savedPreset = raw.themeCustomPreset === "diu" ? "tram" : raw.themeCustomPreset === "sami" ? "sau" : raw.themeCustomPreset;
+        const preset = ["sau", "tram", "am"].includes(savedPreset) ? savedPreset : "sau";
+        document.documentElement.dataset.theme = mode;
+        document.documentElement.dataset.themeMode = mode;
+        document.documentElement.dataset.themeCustom = oldCustomMode || raw.themeCustomEnabled === true ? "on" : "off";
+        document.documentElement.dataset.themePreset = preset;
+      } catch {
+        document.documentElement.dataset.theme = "light";
+        document.documentElement.dataset.themeMode = "light";
+        document.documentElement.dataset.themeCustom = "off";
+        document.documentElement.dataset.themePreset = "sau";
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="./app.css?v=20260425g">
 </head>
 <body>
   <div class="device">
     <div class="screen" id="screen">
       <div class="island"></div>
-      <div class="launch-splash" id="launchSplash" aria-hidden="true">
-        <img class="launch-splash-logo" src="./icon.png" alt="Sami logo">
-      </div>
+      <div class="launch-splash" id="launchSplash" aria-hidden="true"></div>
       <div class="folder-backdrop" id="folderBackdrop"></div>
       <div class="app" id="app">
         <aside class="pane done-pane" id="donePane">
-          <div class="pane-rail done-rail">
-            <div class="eyebrow"><span class="lamp" id="doneLamp"></span><span>Done</span></div>
+          <div class="utility-open-slot" aria-hidden="true">
+            <button class="utility-trigger" id="utilityToggle" type="button" aria-label="Tien ich"></button>
+            <button class="utility-panel-back" id="utilityPanelBack" type="button" aria-label="Dong tien ich"></button>
+          </div>
+          <div class="utility-panel" id="utilityPanel" aria-hidden="true">
+            <div class="utility-panel-inner">
+              <div class="utility-view" id="utilityHome">
+                <section class="utility-section" id="settingsSection">
+                  <button class="utility-item utility-parent" id="openSettings" type="button">Cai dat</button>
+                  <div class="utility-section-body settings-view" id="settingsView"></div>
+                </section>
+                <section class="utility-section" id="trashSection">
+                  <button class="utility-item utility-parent utility-danger-row" id="openTrash" type="button">Thung rac</button>
+                  <div class="utility-section-body trash-view" id="trashView"></div>
+                </section>
+              </div>
+            </div>
           </div>
           <div class="pane-inner">
             <div class="head done-head">
               <div class="done-brand-wrap">
                 <div class="done-brand-row">
                   <button class="brand brand-button" id="doneFolderToggle" type="button">Sami</button>
-                  <button class="done-folder-actions-trigger" id="doneFolderActionsToggle" type="button">&middot;&middot;&middot;</button>
+                  <button class="done-folder-actions-trigger" id="doneFolderActionsToggle" type="button" aria-label="Mo tac vu folder"><svg class="dots-icon" viewBox="0 0 24 8" aria-hidden="true"><circle cx="4" cy="4" r="2.2"/><circle cx="12" cy="4" r="2.2"/><circle cx="20" cy="4" r="2.2"/></svg></button>
                   <div class="current-folder-actions" id="currentFolderActions"></div>
                 </div>
                 <div class="done-folder-menu" id="doneFolderMenu"></div>
@@ -47,20 +81,20 @@
           </aside>
         <section class="pane live-pane" id="livePane">
           <div class="pane-rail live-rail">
-            <div class="eyebrow"><span class="lamp" id="liveLamp"></span><span>Live</span></div>
+            <div class="eyebrow"><span>Live</span><span class="lamp" id="liveLamp"></span></div>
           </div>
           <div class="pane-inner">
             <div class="head live-head">
               <div class="row live-toolbar">
                 <div class="pill" id="liveCount">Live 0</div>
                 <button class="chip undo-btn" id="undoBtn" type="button">Undo</button>
+                <button class="fab" id="addFab" type="button">+</button>
               </div>
             </div>
             <div class="list" id="liveList"></div>
           </div>
         </section>
       </div>
-      <button class="fab" id="addFab" type="button">+</button>
       <div class="overlay" id="overlay"></div>
     </div>
   </div>

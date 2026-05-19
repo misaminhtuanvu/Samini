@@ -1,6 +1,7 @@
 {
   "name": "Sami",
   "short_name": "Sami",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
